@@ -20,9 +20,7 @@ class SolarAnomalyDetector:
         self.anomalies_prophet = None  # <-- AÑADIDO
         
     def load_and_merge_datasets(self, electrical_path, environment_path, irradiance_path):
-        """
-        Carga y combina los tres datasets usando measured_on como clave
-        """
+       
         print("=== CARGA Y DESCRIPCIÓN DE DATOS ===")
         
         # Cargar los datasets
@@ -63,9 +61,6 @@ class SolarAnomalyDetector:
         return df_combined
     
     def exploratory_data_analysis(self, df):
-        """
-        Análisis exploratorio de datos
-        """
         print("\n=== ANÁLISIS EXPLORATORIO DE DATOS ===")
         
         # Estructura de los datos
@@ -89,9 +84,6 @@ class SolarAnomalyDetector:
         self.analyze_correlations(df, numeric_cols[:15])  # Primeras 15 para matriz legible
         
     def create_histograms(self, df, columns):
-        """
-        Crear histogramas para variables continuas
-        """
         print("\n=== CREANDO HISTOGRAMAS ===")
         
         n_cols = min(3, len(columns))
@@ -111,9 +103,6 @@ class SolarAnomalyDetector:
         plt.show()
     
     def analyze_correlations(self, df, columns):
-        """
-        Analizar correlaciones entre variables
-        """
         print("\n=== ANÁLISIS DE CORRELACIONES ===")
         
         # Matriz de correlación
@@ -144,10 +133,6 @@ class SolarAnomalyDetector:
             print(f"  - {var1} vs {var2}: r = {corr:.3f}")
     
     def clean_and_preprocess_data(self, df):
-        """
-        Limpia y preprocesa los datos siguiendo la estrategia definida.
-        VERSIÓN CORREGIDA.
-        """
         print("\n=== LIMPIEZA Y PREPROCESAMIENTO ===")
         
         # 1. Renombrar columnas primero en el DF combinado
@@ -255,9 +240,6 @@ class SolarAnomalyDetector:
         return df.rename(columns=columnas_limpias)
     
     def temporal_analysis(self, df):
-        """
-        Análisis temporal de los datos
-        """
         print("\n=== ANÁLISIS TEMPORAL ===")
         
         # Análisis por hora del día
@@ -322,15 +304,9 @@ class SolarAnomalyDetector:
         df.drop(['hour', 'day_of_week', 'month'], axis=1, inplace=True)
     
     def feature_engineering(self, df):
-        """
-        Ingeniería de características
-        """
+        
         print("\n=== INGENIERÍA DE CARACTERÍSTICAS ===")
         
-        # Características básicas ya están en el dataset
-        # Agregar algunas características derivadas si es necesario
-        
-        # Eficiencia de conversión (si tenemos tanto AC como DC power)
         power_ac_cols = [col for col in df.columns if 'power' in col.lower() and 'ac' in col.lower()]
         power_dc_cols = [col for col in df.columns if 'power' in col.lower() and 'dc' in col.lower()]
         
@@ -358,9 +334,6 @@ class SolarAnomalyDetector:
         return df
     
     def select_variables(self, df):
-        """
-        Selección de variables para detección de anomalías
-        """
         print("\n=== SELECCIÓN DE VARIABLES ===")
         
         # Variables eléctricas importantes
@@ -400,9 +373,6 @@ class SolarAnomalyDetector:
         return df[selected_vars]
     
     def euclidean_distance_detector(self, df, percentile=95):
-        """
-        Detector de anomalías basado en distancia euclidiana
-        """
         print(f"\n=== DETECTOR EUCLIDIANO (percentil {percentile}%) ===")
         
         # Verificar que tenemos datos
@@ -448,9 +418,6 @@ class SolarAnomalyDetector:
         return anomalias
     
     def mahalanobis_distance_detector(self, df, percentile=95):
-        """
-        Detector de anomalías basado en distancia de Mahalanobis
-        """
         print(f"\n=== DETECTOR MAHALANOBIS (percentil {percentile}%) ===")
         
         # Verificar que tenemos datos
@@ -512,9 +479,6 @@ class SolarAnomalyDetector:
         return anomalias
     
     def isolation_forest_detector(self, df, contamination=0.05):
-        """
-        Detector de anomalías basado en Isolation Forest
-        """
         print(f"\n=== DETECTOR ISOLATION FOREST (contaminación {contamination*100}%) ===")
         
         # Verificar que tenemos datos
@@ -575,9 +539,6 @@ class SolarAnomalyDetector:
         return anomalias
     
     def prophet_anomaly_detector(self, df, interval_width=0.99):
-        """
-        Detector de anomalías basado en el modelo de series temporales Prophet.
-        """
         print(f"\n=== DETECTOR DE ANOMALÍAS CON PROPHET (intervalo de confianza {interval_width*100}%) ===")
 
         # Seleccionar una variable objetivo para el pronóstico (priorizar potencia)
@@ -636,9 +597,6 @@ class SolarAnomalyDetector:
         return self.anomalies_prophet
 
     def compare_anomaly_methods(self):
-        """
-        Comparar resultados entre métodos
-        """
         print("\n=== COMPARACIÓN DE MÉTODOS ===")
         
         # Número de anomalías por método
@@ -684,9 +642,6 @@ class SolarAnomalyDetector:
         print(f"- Prophet: Sensible a desviaciones de patrones temporales (tendencias y estacionalidades).")
     
     def generate_anomaly_dates_list(self):
-        """
-        Generar lista de fechas de anomalías detectadas
-        """
         print("\n=== FECHAS DE ANOMALÍAS DETECTADAS ===")
         
         results = {}
@@ -711,9 +666,6 @@ class SolarAnomalyDetector:
         return results
     
     def analyze_anomaly_context(self):
-        """
-        Analizar el contexto y coherencia de las anomalías detectadas
-        """
         print("\n=== ANÁLISIS DE CONTEXTO DE ANOMALÍAS ===")
         
         if self.inversor_data is None:
@@ -747,9 +699,6 @@ class SolarAnomalyDetector:
                     print(f"  {days[day_idx]} - {count} anomalías")
     
     def create_summary_visualization(self):
-        """
-        Crear visualización resumen de todas las anomalías
-        """
         print("\n=== CREANDO VISUALIZACIÓN RESUMEN ===")
         
         if self.inversor_data is None:
@@ -791,9 +740,6 @@ class SolarAnomalyDetector:
 
     
     def analyze_bivariate_relationships(self, df):
-        """
-        Analiza y visualiza las relaciones entre pares de variables clave.
-        """
         print("\n=== ANÁLISIS DE RELACIONES BIVARIADAS ===")
         
         # Verificar que las columnas necesarias existan
@@ -843,9 +789,6 @@ class SolarAnomalyDetector:
         plt.show()
     
     def export_anomaly_results(self, filename='anomaly_results.csv'):
-        """
-        Exportar resultados de anomalías a CSV
-        """
         print(f"\n=== EXPORTANDO RESULTADOS A {filename} ===")
         
         all_anomalies = []
@@ -859,7 +802,7 @@ class SolarAnomalyDetector:
         
         for method_name, anomalies in methods:
             if anomalies is not None:
-                # El score para Prophet es el valor real, para los otros es el score de anomalía
+                
                 scores = anomalies.values if isinstance(anomalies, pd.Series) else [np.nan] * len(anomalies)
                 for date, score in zip(anomalies.index, scores):
                     all_anomalies.append({
@@ -877,9 +820,7 @@ class SolarAnomalyDetector:
             print("No hay anomalías para exportar")
     
     def run_complete_analysis(self, electrical_path, environment_path, irradiance_path):
-        """
-        Ejecuta el análisis completo siguiendo todos los puntos requeridos
-        """
+       
         print("=== INICIANDO ANÁLISIS COMPLETO DE ANOMALÍAS EN SISTEMAS SOLARES ===")
         
         # Puntos 1, 2, 3, 4, 5
@@ -936,18 +877,13 @@ class SolarAnomalyDetector:
             'prophet_anomalies': self.anomalies_prophet
         }
 
-# Ejemplo de uso
 if __name__ == "__main__":
-    # Crear instancia del detector
     detector = SolarAnomalyDetector()
     
-    # Ejemplaza con las rutas reales de tus archivos
-    # Scutar análisis completo
-    # Reee necesitan los archivos CSV para ejecutar esta parte.
     results = detector.run_complete_analysis(
         electrical_path='data/electrical_data.csv',
         environment_path='data/environment_data.csv', 
         irradiance_path='data/irradiance_data.csv'
     )
     
-    print("\nAnálisis finalizado. Para ejecutar, descomenta el bloque final y proporciona las rutas a los archivos de datos.")
+    
